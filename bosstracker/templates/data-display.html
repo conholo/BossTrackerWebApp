@@ -1,0 +1,74 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+    <div class="content-section">
+        <form method="POST" action="" novalidate>
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Add a Boss</legend>
+                <div class="form-group">
+                    {{ form.bossname.label(class="form-control-label") }}
+
+                    {% if form.bossname.errors %}
+                        {{ form.bossname(class="form-control form-control-sm is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.bossname.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.bossname(class="form-control form-control-sm") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+
+            <div class="form-group">
+                {{ form.submit(class="btn btn-sm btn-outline-info") }}
+            </div>
+
+        </form>
+    </div>
+
+<table class="table table-dark" id="boss-table">
+    <thead>
+        <tr>
+            <th scope="col"></th>
+            <th scope="col">Name</th>
+            <th scope="col">Deaths</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for boss_entry in all_bosses%}
+            <tr id="boss-row-{{boss_entry.id}}">
+                <td>
+                    <button type="button" id="remove-entry-{{boss_entry.id}}" class="btn btn-sm btn-light remove-entry-button">X</button>
+                </td>
+                <td class="boss-name-parent">
+                   <input type="text" id="boss-name-{{boss_entry.id}}" class="form-control boss-name" value="{{boss_entry.bossname}}">
+                </td>
+                <td id="death-count-{{boss_entry.id}}">
+                    {{boss_entry.deathcount}}
+                </td>
+
+                <td>
+                    <div class="form-check">
+                      <input class="form-check-input is-completed" type="checkbox" value="" id="is-completed-{{boss_entry.id}}" {% if boss_entry.iscompleted %} checked {% endif %}>
+                      <label class="form-check-label" for="is-completed-{{boss_entry.id}}">
+                        Completed
+                      </label>
+                    </div>
+                </td>
+                {% if boss_entry.iscompleted %}
+                {% else %}
+                <td>
+                    <button type="button" id="add-{{boss_entry.id}}" class="btn btn-sm btn-light add-death-button">+1</button>
+                    <button type="button" id="remove-{{boss_entry.id}}" class="btn btn-sm btn-light remove-death-button">-1</button>
+                </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
